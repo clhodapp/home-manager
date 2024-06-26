@@ -100,6 +100,8 @@ let
       settingsFormat.generate "user.conf" cfg.settings;
   };
 
+  configHome = if (config.xdg.enable) then (lib.removePrefix config.home.homeDirectory config.xdg.configHome) else ".config";
+
 in {
   meta.maintainers = [ lib.maintainers.rycee ];
 
@@ -336,7 +338,7 @@ in {
           ${pkgs.sd-switch}/bin/sd-switch \
             ''${DRY_RUN:+--dry-run} $VERBOSE_ARG ${timeoutArg} \
             ''${oldGenPath:+--old-units $oldGenPath/home-files/.config/systemd/user} \
-            --new-units $newGenPath/home-files/.config/systemd/user
+            --new-units $newGenPath/home-files/${configHome}/systemd/user
         '';
       };
 
